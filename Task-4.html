@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Task 4 - Full Project</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:#f4f6f9;
+}
+
+/* NAVBAR */
+nav{
+    background:#222;
+    color:white;
+    padding:15px;
+    display:flex;
+    justify-content:space-between;
+}
+
+nav ul{
+    list-style:none;
+    display:flex;
+    gap:20px;
+}
+
+nav ul li{
+    cursor:pointer;
+}
+
+/* SECTIONS */
+section{
+    padding:40px;
+}
+
+h2{
+    margin-bottom:20px;
+}
+
+/* ABOUT */
+.about{
+    background:white;
+}
+
+/* TODO APP */
+.todo input{
+    padding:8px;
+    width:200px;
+}
+
+.todo button{
+    padding:8px 12px;
+    background:green;
+    color:white;
+    border:none;
+    cursor:pointer;
+}
+
+.todo ul{
+    margin-top:15px;
+    list-style:none;
+}
+
+.todo li{
+    background:#e0f2f1;
+    padding:8px;
+    margin:5px 0;
+    display:flex;
+    justify-content:space-between;
+}
+
+/* PRODUCT SECTION */
+.products{
+    background:white;
+}
+
+.product-container{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:15px;
+}
+
+.product{
+    background:#fff;
+    padding:15px;
+    border:1px solid #ccc;
+}
+
+select{
+    padding:5px;
+    margin:10px 0;
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+    nav{
+        flex-direction:column;
+        gap:10px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+    <h1>My Portfolio</h1>
+    <ul>
+        <li>About</li>
+        <li>Projects</li>
+        <li>Contact</li>
+    </ul>
+</nav>
+
+<!-- ABOUT SECTION -->
+<section class="about">
+    <h2>About Me</h2>
+    <p>Hello! I'm learning Full Stack Web Development at ApexPlanet Internship.
+    This project demonstrates Task-4 implementation.</p>
+</section>
+
+<!-- TODO APP WITH LOCAL STORAGE -->
+<section class="todo">
+    <h2>To-Do App (With LocalStorage)</h2>
+    <input type="text" id="taskInput" placeholder="Enter task">
+    <button onclick="addTask()">Add</button>
+    <ul id="taskList"></ul>
+</section>
+
+<!-- PRODUCT FILTER & SORT -->
+<section class="products">
+    <h2>Product Listing</h2>
+
+    <label>Filter by Category:</label>
+    <select id="filter" onchange="displayProducts()">
+        <option value="all">All</option>
+        <option value="electronics">Electronics</option>
+        <option value="clothing">Clothing</option>
+    </select>
+
+    <label>Sort by Price:</label>
+    <select id="sort" onchange="displayProducts()">
+        <option value="default">Default</option>
+        <option value="low">Low to High</option>
+        <option value="high">High to Low</option>
+    </select>
+
+    <div class="product-container" id="productContainer"></div>
+</section>
+
+<script>
+
+/* =======================
+   TO-DO WITH LOCAL STORAGE
+========================= */
+
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+function saveTasks(){
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+function addTask(){
+    let input = document.getElementById("taskInput");
+    if(input.value.trim() === "") return;
+
+    tasks.push(input.value);
+    saveTasks();
+    input.value="";
+    displayTasks();
+}
+
+function deleteTask(index){
+    tasks.splice(index,1);
+    saveTasks();
+    displayTasks();
+}
+
+function displayTasks(){
+    let list = document.getElementById("taskList");
+    list.innerHTML="";
+    tasks.forEach((task,index)=>{
+        list.innerHTML += `
+            <li>${task}
+            <button onclick="deleteTask(${index})">X</button>
+            </li>`;
+    });
+}
+
+displayTasks();
+
+
+/* =======================
+   PRODUCT FILTER & SORT
+========================= */
+
+let products = [
+    {name:"Laptop", category:"electronics", price:500},
+    {name:"Headphones", category:"electronics", price:100},
+    {name:"T-Shirt", category:"clothing", price:20},
+    {name:"Jacket", category:"clothing", price:80}
+];
+
+function displayProducts(){
+    let filter = document.getElementById("filter").value;
+    let sort = document.getElementById("sort").value;
+    let container = document.getElementById("productContainer");
+
+    let filteredProducts = products.filter(product =>
+        filter === "all" || product.category === filter
+    );
+
+    if(sort === "low"){
+        filteredProducts.sort((a,b)=>a.price-b.price);
+    }
+    else if(sort === "high"){
+        filteredProducts.sort((a,b)=>b.price-a.price);
+    }
+
+    container.innerHTML="";
+    filteredProducts.forEach(product=>{
+        container.innerHTML += `
+            <div class="product">
+                <h4>${product.name}</h4>
+                <p>Category: ${product.category}</p>
+                <p>Price: $${product.price}</p>
+            </div>`;
+    });
+}
+
+displayProducts();
+
+</script>
+
+</body>
+</html>

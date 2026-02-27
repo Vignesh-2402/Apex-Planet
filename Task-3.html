@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Task 3 - Advanced Web Development</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+
+    body {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        text-align: center;
+        padding: 20px;
+    }
+
+    h1 {
+        margin-bottom: 20px;
+    }
+
+    .container {
+        max-width: 600px;
+        margin: auto;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    button {
+        margin-top: 10px;
+        padding: 10px 15px;
+        border: none;
+        background: #ff9800;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #e68900;
+    }
+
+    .question {
+        margin: 15px 0;
+    }
+
+    .option {
+        display: block;
+        margin: 5px 0;
+        padding: 8px;
+        background: white;
+        color: black;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .option:hover {
+        background: #ddd;
+    }
+
+    #joke {
+        margin-top: 15px;
+        font-style: italic;
+    }
+
+    /* ===== Responsive Design ===== */
+    @media (max-width: 600px) {
+        body {
+            padding: 10px;
+        }
+
+        .container {
+            width: 95%;
+        }
+
+        h1 {
+            font-size: 20px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<h1>Task 3 - Advanced JavaScript</h1>
+
+<div class="container">
+
+    <!-- Quiz Section -->
+    <h2>Interactive Quiz</h2>
+    <div id="quiz">
+        <div class="question">Which language is used for styling web pages?</div>
+        <div class="option" onclick="checkAnswer('A')">A) HTML</div>
+        <div class="option" onclick="checkAnswer('B')">B) CSS</div>
+        <div class="option" onclick="checkAnswer('C')">C) Python</div>
+    </div>
+
+    <p id="result"></p>
+
+    <hr style="margin:20px 0;">
+
+    <!-- API Section -->
+    <h2>Random Joke Generator (API Fetch)</h2>
+    <button onclick="getJoke()">Get Joke</button>
+    <p id="joke"></p>
+
+</div>
+
+<script>
+    // ===== Quiz Logic =====
+    function checkAnswer(answer) {
+        let result = document.getElementById("result");
+
+        if (answer === "B") {
+            result.innerHTML = "✅ Correct! CSS is used for styling.";
+            result.style.color = "lightgreen";
+        } else {
+            result.innerHTML = "❌ Wrong! Try again.";
+            result.style.color = "red";
+        }
+    }
+
+    // ===== Fetch API Logic =====
+    async function getJoke() {
+        let jokeElement = document.getElementById("joke");
+        jokeElement.innerHTML = "Loading...";
+
+        try {
+            let response = await fetch("https://official-joke-api.appspot.com/random_joke");
+            let data = await response.json();
+
+            jokeElement.innerHTML = data.setup + " 🤔 <br><br>" + data.punchline + " 😂";
+        } catch (error) {
+            jokeElement.innerHTML = "Failed to fetch joke.";
+        }
+    }
+</script>
+
+</body>
+</html>
